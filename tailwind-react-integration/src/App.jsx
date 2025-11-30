@@ -1,20 +1,17 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useState } from "react";
+
+
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [count, setCount] = useState(0);
 
   return (
     <>
       <div>
-      <h1 className='text-3xl font-bold underline'>
-        Hello Sultan Welcome to react js
-      </h1>  
+        <h1 className="text-4xl font-bold text-red-500">Tailwind Working!</h1>
       </div>
     </>
-  )
+  );
 }
 
-export default App
+export default App;
