@@ -1,42 +1,34 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+import data from "../data.json";
 
-const HomePage = () => {
+export default function HomePage() {
   const [recipes, setRecipes] = useState([]);
 
   useEffect(() => {
-    fetch("/data.json")
-      .then((res) => res.json())
-      .then((data) => setRecipes(data))
-      .catch((error) => console.log("Error loading data:", error));
+    setRecipes(data); // بارگذاری mock data
   }, []);
 
   return (
-    <div className="min-h-screen bg-gray-100 p-6">
-      <h1 className="text-3xl font-bold text-center mb-8 text-gray-800">
-        Recipe Sharing Platform
-      </h1>
-
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+    <div className="p-6 max-w-5xl mx-auto">
+      <h1 className="text-3xl font-bold mb-6">Recipe Finder</h1>
+      <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
         {recipes.map((recipe) => (
-          <div
-            key={recipe.id}
-            className="bg-white p-4 rounded-xl shadow-md hover:shadow-xl hover:scale-105 transition duration-300"
-          >
-            <img
-              src={recipe.image}
-              alt={recipe.title}
-              className="w-full h-40 object-cover rounded-lg"
-            />
-            <h2 className="text-xl font-semibold mt-4">{recipe.title}</h2>
-            <p className="text-gray-600 mt-2">{recipe.summary}</p>
-            <button className="mt-4 bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600">
-              View Details
-            </button>
+          <div key={recipe.id} className="bg-white shadow rounded-lg overflow-hidden">
+            <img src={recipe.image} alt={recipe.title} className="w-full h-40 object-cover"/>
+            <div className="p-4">
+              <h2 className="text-xl font-semibold mb-2">{recipe.title}</h2>
+              <p className="text-gray-600 mb-4">{recipe.summary}</p>
+              <Link
+                to={`/recipe/${recipe.id}`}
+                className="text-blue-600 font-semibold"
+              >
+                See Details →
+              </Link>
+            </div>
           </div>
         ))}
       </div>
     </div>
   );
-};
-
-export default HomePage;
+}
