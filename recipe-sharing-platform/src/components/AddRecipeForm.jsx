@@ -4,23 +4,28 @@ export default function AddRecipeForm({ addRecipe }) {
   const [title, setTitle] = useState("");
   const [ingredients, setIngredients] = useState("");
   const [steps, setSteps] = useState("");
-  const [error, setError] = useState("");
+  const [errors, setErrors] = useState({});
+
+  // تابع validate برای اعتبارسنجی
+  const validate = () => {
+    const newErrors = {};
+
+    if (!title.trim()) newErrors.title = "Title is required.";
+    if (!ingredients.trim()) newErrors.ingredients = "Ingredients are required.";
+    else if (ingredients.split(",").length < 2)
+      newErrors.ingredients = "At least two ingredients are required.";
+    if (!steps.trim()) newErrors.steps = "Preparation steps are required.";
+
+    setErrors(newErrors);
+
+    return Object.keys(newErrors).length === 0; // true اگر بدون خطا
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // Validation
-    if (!title.trim() || !ingredients.trim() || !steps.trim()) {
-      setError("All fields are required.");
-      return;
-    }
+    if (!validate()) return;
 
-    if (ingredients.split(",").length < 2) {
-      setError("Ingredients should include at least two items, separated by commas.");
-      return;
-    }
-
-    // Create recipe object
     const newRecipe = {
       id: Date.now(),
       title,
@@ -30,39 +35,50 @@ export default function AddRecipeForm({ addRecipe }) {
 
     addRecipe(newRecipe);
 
-    // Reset form
+    // reset form
     setTitle("");
     setIngredients("");
     setSteps("");
-    setError("");
+    setErrors({});
   };
 
   return (
     <div className="max-w-xl mx-auto p-6 bg-white rounded-lg shadow">
       <h2 className="text-2xl font-bold mb-4">Add New Recipe</h2>
-      {error && <p className="text-red-600 mb-3">{error}</p>}
+
       <form onSubmit={handleSubmit} className="space-y-4">
-        <input
-          type="text"
-          placeholder="Recipe Title"
-          className="w-full p-2 border rounded"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-        />
+        <div>
+          <input
+            type="text"
+            placeholder="Recipe Title"
+            className="w-full p-2 border rounded"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+          />
+          {errors.title && <p className="text-red-600 mt-1">{errors.title}</p>}
+        </div>
 
-        <textarea
-          placeholder="Ingredients (separate by commas)"
-          className="w-full p-2 border rounded"
-          value={ingredients}
-          onChange={(e) => setIngredients(e.target.value)}
-        />
+        <div>
+          <textarea
+            placeholder="Ingredients (separate by commas)"
+            className="w-full p-2 border rounded"
+            value={ingredients}
+            onChange={(e) => setIngredients(e.target.value)}
+          />
+          {errors.ingredients && (
+            <p className="text-red-600 mt-1">{errors.ingredients}</p>
+          )}
+        </div>
 
-        <textarea
-          placeholder="Preparation Steps (one step per line)"
-          className="w-full p-2 border rounded"
-          value={steps}
-          onChange={(e) => setSteps(e.target.value)}
-        />
+        <div>
+          <textarea
+            placeholder="Preparation Steps (one step per line)"
+            className="w-full p-2 border rounded"
+            value={steps}
+            onChange={(e) => setSteps(e.target.value)}
+          />
+          {errors.steps && <p className="text-red-600 mt-1">{errors.steps}</p>}
+        </div>
 
         <button
           type="submit"
