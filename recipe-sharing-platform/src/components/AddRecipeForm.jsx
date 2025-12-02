@@ -6,10 +6,8 @@ export default function AddRecipeForm({ addRecipe }) {
   const [steps, setSteps] = useState("");
   const [errors, setErrors] = useState({});
 
-  // تابع validate برای اعتبارسنجی
   const validate = () => {
     const newErrors = {};
-
     if (!title.trim()) newErrors.title = "Title is required.";
     if (!ingredients.trim()) newErrors.ingredients = "Ingredients are required.";
     else if (ingredients.split(",").length < 2)
@@ -17,13 +15,11 @@ export default function AddRecipeForm({ addRecipe }) {
     if (!steps.trim()) newErrors.steps = "Preparation steps are required.";
 
     setErrors(newErrors);
-
-    return Object.keys(newErrors).length === 0; // true اگر بدون خطا
+    return Object.keys(newErrors).length === 0;
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
     if (!validate()) return;
 
     const newRecipe = {
@@ -35,7 +31,6 @@ export default function AddRecipeForm({ addRecipe }) {
 
     addRecipe(newRecipe);
 
-    // reset form
     setTitle("");
     setIngredients("");
     setSteps("");
@@ -43,11 +38,11 @@ export default function AddRecipeForm({ addRecipe }) {
   };
 
   return (
-    <div className="max-w-xl mx-auto p-6 bg-white rounded-lg shadow">
+    <div className="max-w-3xl mx-auto p-6 bg-white rounded-lg shadow">
       <h2 className="text-2xl font-bold mb-4">Add New Recipe</h2>
 
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <div>
+      <form onSubmit={handleSubmit} className="space-y-4 md:grid md:grid-cols-2 md:gap-4">
+        <div className="md:col-span-2">
           <input
             type="text"
             placeholder="Recipe Title"
@@ -58,7 +53,7 @@ export default function AddRecipeForm({ addRecipe }) {
           {errors.title && <p className="text-red-600 mt-1">{errors.title}</p>}
         </div>
 
-        <div>
+        <div className="md:col-span-2">
           <textarea
             placeholder="Ingredients (separate by commas)"
             className="w-full p-2 border rounded"
@@ -70,7 +65,7 @@ export default function AddRecipeForm({ addRecipe }) {
           )}
         </div>
 
-        <div>
+        <div className="md:col-span-2">
           <textarea
             placeholder="Preparation Steps (one step per line)"
             className="w-full p-2 border rounded"
@@ -80,12 +75,14 @@ export default function AddRecipeForm({ addRecipe }) {
           {errors.steps && <p className="text-red-600 mt-1">{errors.steps}</p>}
         </div>
 
-        <button
-          type="submit"
-          className="bg-blue-600 text-white w-full p-2 rounded hover:bg-blue-700 transition"
-        >
-          Add Recipe
-        </button>
+        <div className="md:col-span-2">
+          <button
+            type="submit"
+            className="bg-blue-600 text-white w-full p-2 rounded hover:bg-blue-700 transition"
+          >
+            Add Recipe
+          </button>
+        </div>
       </form>
     </div>
   );
